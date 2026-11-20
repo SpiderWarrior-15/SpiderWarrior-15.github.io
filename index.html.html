@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spider Warrior – The Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#DCE8FF;--ink:#0E1A3F;--muted:#3C4C7E;--glass:rgba(255,255,255,.42);--edge:rgba(255,255,255,.75);--hi:rgba(255,255,255,.95);--sh:rgba(30,50,120,.2);--red:#E5243B;--cyan:#0B8FC7;--b1:#FF5FA2;--b2:#35D6FF;--b3:#FFD43B;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070B22;--ink:#EEF3FF;--muted:#A8B6E6;--glass:rgba(255,255,255,.08);--edge:rgba(255,255,255,.22);--hi:rgba(255,255,255,.4);--sh:rgba(0,0,0,.5);--red:#FF4D5E;--cyan:#59E0FF;--b1:#FF2E7E;--b2:#1B8FD6;--b3:#8A4DFF}}
+:root[data-theme="dark"]{--bg:#070B22;--ink:#EEF3FF;--muted:#A8B6E6;--glass:rgba(255,255,255,.08);--edge:rgba(255,255,255,.22);--hi:rgba(255,255,255,.4);--sh:rgba(0,0,0,.5);--red:#FF4D5E;--cyan:#59E0FF;--b1:#FF2E7E;--b2:#00B4FF;--b3:#8A4DFF}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:500 1.05rem/1.55 Fredoka,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3{font-family:Bungee,system-ui,sans-serif;font-weight:400;margin:0;line-height:1.15}
+h2{font-size:clamp(1.5rem,4.5vw,2.3rem);margin-bottom:14px}
+h3{font-size:1.02rem;margin-bottom:6px}
+p{margin:.5em 0;max-width:62ch}
+ul{margin:.4em 0;padding-left:1.1em}li{margin:.25em 0}
+a{color:var(--cyan);font-weight:700;text-decoration:none;overflow-wrap:anywhere}
+a:hover{text-decoration:underline}
+.blobs{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.blobs i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.75;animation:drift 18s ease-in-out infinite alternate}
+.blobs i:nth-child(1){width:46vmax;height:46vmax;background:var(--b1);left:-12vmax;top:-10vmax}
+.blobs i:nth-child(2){width:40vmax;height:40vmax;background:var(--b2);right:-10vmax;top:20vh;animation-delay:-6s}
+.blobs i:nth-child(3){width:36vmax;height:36vmax;background:var(--b3);left:20vw;bottom:-14vmax;animation-delay:-11s}
+@keyframes drift{to{transform:translate(8vw,6vh) scale(1.15)}}
+.g{position:relative;background:var(--glass);border:1px solid var(--edge);border-radius:26px;backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 14px 44px var(--sh);overflow:hidden}
+.g::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--hi) 0%,transparent 38%);opacity:.35;pointer-events:none}
+.wrap{max-width:920px;margin:0 auto;padding:14px 14px 120px}
+.hud{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:10px 18px}
+.hud b{font-family:Bungee,sans-serif;font-size:.95rem;cursor:pointer}
+.hud small{color:var(--muted);font-weight:700}
+.xp{flex:1;min-width:150px}
+.bar{height:10px;border-radius:99px;background:var(--glass);border:1px solid var(--edge);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--cyan));transition:width .6s}
+button,summary{font:inherit;color:inherit;cursor:pointer}
+.pill{background:var(--glass);border:1px solid var(--edge);border-radius:99px;padding:8px 16px;font-weight:700;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 var(--hi)}
+.pill:hover{background:var(--hi)}
+.pill.main{background:var(--red);color:#fff;border-color:transparent}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.page{display:none;padding:26px 22px;margin-top:16px}
+.page.on{display:block;animation:in .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(28px) scale(.97);filter:blur(10px)}}
+.hero h1{font-size:clamp(2.2rem,9vw,4.6rem);background:linear-gradient(90deg,var(--red),#FFB000,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .tag{color:var(--muted);font-weight:700;margin:10px 0 18px}
+.motto{display:inline-block;margin:6px 0 16px;font-family:Bungee,sans-serif;font-size:.85rem;color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chips span{padding:5px 14px;border-radius:99px;border:1px solid var(--edge);background:var(--glass);font-weight:700;font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+.card{padding:16px 18px;border-radius:20px}
+.card .ic{font-size:1.6rem}
+details.card summary{font-family:Bungee,sans-serif;font-size:1rem;list-style:none}
+details.card summary::after{content:"+";float:right;color:var(--red);font-size:1.3rem}
+details[open].card summary::after{content:"–"}
+.meta{color:var(--muted);font-size:.88rem;font-weight:700;margin:4px 0}
+.quote{margin-top:18px;padding-left:14px;border-left:3px solid var(--red);font-weight:700}
+label{display:block;font-weight:700;font-size:.88rem;margin:8px 0 3px}
+input,select{font:inherit;width:100%;padding:9px 12px;border-radius:14px;border:1px solid var(--edge);background:var(--glass);color:var(--ink)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.out{margin-top:12px;padding:12px 14px;border-radius:16px;border:1px dashed var(--edge);font-weight:800}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tabs .pill[aria-pressed="true"]{background:var(--red);color:#fff}
+.flow{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:4px;padding:8px;border-radius:99px;max-width:calc(100vw - 20px);overflow-x:auto;z-index:5}
+.dock button{background:none;border:0;border-radius:99px;padding:8px 12px;font-size:1.25rem;white-space:nowrap;transition:background .3s,transform .3s}
+.dock button span{display:none;font-size:.8rem;font-weight:700;margin-left:6px}
+.dock button[aria-current="page"]{background:var(--hi);transform:translateY(-3px)}
+.dock button[aria-current="page"] span{display:inline}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-90px);padding:10px 20px;border-radius:99px;z-index:9;font-weight:800;transition:transform .4s;max-width:90vw;text-align:center}
+.toast.on{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.pill{box-shadow:inset 0 1px 0 var(--hi),0 4px 0 var(--edge);transition:transform .15s}
+.pill:active{transform:translateY(4px);box-shadow:none}
+.page.on{animation:pop .6s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{opacity:0;transform:translateY(40px) scale(.8) rotate(-2deg)}}
+.card{transition:transform .25s cubic-bezier(.3,1.8,.5,1)}.card:hover{transform:rotate(-1.5deg) scale(1.03)}
+.dangle{position:fixed;right:70px;top:env(safe-area-inset-top,0px);z-index:6;display:flex;flex-direction:column;align-items:center;pointer-events:none;transform-origin:top;animation:swing 3s ease-in-out infinite alternate}
+.dangle i{width:2px;height:var(--len,50px);background:var(--ink);opacity:.5;transition:height .8s cubic-bezier(.3,1.6,.5,1)}
+.dangle span{font-size:2rem;margin-top:-6px}
+@keyframes swing{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+.conf{position:fixed;left:50%;top:40%;z-index:9;font-size:1.7rem;pointer-events:none;animation:fly 1s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.field{position:relative;height:200px;border-radius:18px;border:1px dashed var(--edge);margin:10px 0;overflow:hidden}
+.fly{position:absolute;font-size:2rem;background:none;border:0;animation:pop .2s}
+</style>
+</head>
+<body>
+<div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="dangle" aria-hidden="true"><i></i><span>🕷️</span></div>
+<div class="toast g" id="toast" role="status"></div>
+<div class="wrap">
+<header class="hud g">
+  <b id="logo">🕷️ Spider Warrior</b><small>Level <span id="lv">1</span></small>
+  <div class="xp"><div class="bar"><i id="xpb"></i></div></div>
+  <small><span id="xpn">0</span>/240 XP</small>
+  <button class="pill" id="theme" aria-label="Toggle light and dark theme">🌗</button>
+</header>
+
+<main>
+<section class="page g hero" id="start" data-ic="🕸️" data-t="Command Center">
+  <h1>Spider Warrior</h1>
+  <p class="tag">Mazhar Faizy · Student, technology enthusiast &amp; creative thinker</p>
+  <div class="motto">Discipline. Depth. Destiny.</div>
+  <h2>Welcome to my world.</h2>
+  <p>I’m a curious student who enjoys exploring technology, science, creativity and new ideas. I believe learning should go beyond textbooks: it should involve experimenting, building, questioning and discovering.</p>
+  <p>This is my digital world, a collection of my interests, projects, experiences, achievements and ambitions. <b>Explore. Discover. Innovate.</b></p>
+  <h3 style="margin-top:18px">My core identity</h3>
+  <div class="chips"><span>Curious mind</span><span>Strategic thinker</span><span>Creative problem-solver</span><span>Technology enthusiast</span><span>Lifelong learner</span></div>
+  <button class="pill main" data-go="identity">🎮 Press start</button>
+</section>
+
+<section class="page g" id="identity" data-ic="🧬" data-t="Identity Base">
+  <h2>About me</h2>
+  <p>I’m a student from Sri Lanka with a strong interest in technology, science and innovation. I enjoy exploring how things work, understanding complicated ideas and turning concepts into practical projects.</p>
+  <p>My interests range from artificial intelligence and electronics to neuroscience, graphic design and communication. My long-term ambition is to become a neurologist, explore the mysteries of the human brain and contribute positively to society.</p>
+  <h3 style="margin-top:16px">My personality</h3>
+  <div class="grid">
+    <div class="g card"><div class="ic">♟️</div><h3>The Strategist</h3>I enjoy planning, analysing and thinking ahead.</div>
+    <div class="g card"><div class="ic">🎨</div><h3>The Creator</h3>I like developing ideas, concepts and digital designs.</div>
+    <div class="g card"><div class="ic">🧭</div><h3>The Explorer</h3>Curious about technology, science and the world around me.</div>
+    <div class="g card"><div class="ic">🎤</div><h3>The Communicator</h3>I enjoy debate, discussion and sharing ideas.</div>
+    <div class="g card"><div class="ic">📚</div><h3>The Learner</h3>There’s always something new to discover.</div>
+  </div>
+  <div class="quote">Discipline creates consistency.<br>Depth creates understanding.<br>Destiny is shaped by the decisions we make.</div>
+</section>
+
+<section class="page g" id="skills" data-ic="🧪" data-t="Skill Laboratory">
+  <h2>Skills &amp; interests</h2>
+  <div class="grid">
+    <div class="g card"><h3>💻 Technology</h3><ul><li>Exploring artificial intelligence</li><li>Microcontrollers and electronics</li><li>Experimenting with ESP32 and Magicbit</li><li>Internet of Things concepts</li><li>Software and digital platforms</li></ul></div>
+    <div class="g card"><h3>🎨 Creativity &amp; design</h3><ul><li>Graphic design concepts</li><li>Logo and visual identity</li><li>Digital editing</li><li>Creative project planning</li><li>Website and interface concepts</li></ul></div>
+    <div class="g card"><h3>🎤 Communication</h3><ul><li>Debate and public speaking</li><li>Presenting ideas</li><li>Team collaboration</li><li>Organising activities</li></ul></div>
+    <div class="g card"><h3>🔬 Science &amp; learning</h3><ul><li>Interest in neuroscience</li><li>Human biology and the brain</li><li>Mathematics and scientific thinking</li><li>Problem-solving, independent learning</li></ul></div>
+  </div>
+  <h3 style="margin-top:18px">Other interests</h3>
+  <div class="chips"><span>🎵 Music</span><span>🧊 Speedcubing</span><span>Creative exploration</span><span>Personal development</span></div>
+</section>
+
+<section class="page g" id="projects" data-ic="🚀" data-t="Innovation Zone">
+  <h2>My projects</h2>
+  <p class="meta">Tap a project to open it.</p>
+  <div class="grid" style="grid-template-columns:1fr">
+    <details class="g card" open><summary>Spidey Orbit</summary><p class="meta">AI · IoT · Personal assistant · Concept and development planning</p><p>An ambitious personal assistant built around a futuristic dashboard and connected technology.</p><ul><li>Intelligent personal dashboard</li><li>Internet connectivity</li><li>Useful information and tools</li><li>Personal study assistance</li><li>Future AI and hardware integration</li></ul><p>The goal is a digital assistant that can grow over time.</p></details>
+    <details class="g card"><summary>Magicbit ESP32 Experiments</summary><p class="meta">Electronics · Embedded systems · Learning and experimentation</p><p>Exploring microcontroller technology with the Magicbit Core V3.</p><ul><li>Display interfaces</li><li>Ultrasonic distance sensing</li><li>Temperature and humidity monitoring</li><li>Wi-Fi connectivity</li><li>Interactive hardware experiments</li></ul></details>
+    <details class="g card"><summary>WarriorOS</summary><p class="meta">Web design · Digital platform · Concept and development</p><p>A separate personal digital platform concept focused on a modern interface, user experience and interactive features.</p></details>
+    <details class="g card"><summary>GLACC S02 – Football Tournament Identity</summary><p class="meta">Graphic design · Branding · Visual identity concept</p><p>A tournament branding concept with a royal crest, traditional football identity, navy blue, gold and white.</p></details>
+  </div>
+</section>
+
+<section class="page g" id="arena" data-ic="🏆" data-t="Achievement Arena">
+  <h2>Experiences &amp; milestones</h2>
+  <div class="grid" style="grid-template-columns:1fr">
+    <div class="g card">🏅 Bytesize Quiz finalist with QuizWarriors</div>
+    <div class="g card">🧠 Participation in inter-school Quirath activities</div>
+    <div class="g card">🎤 School debate activities, including iLead’25</div>
+    <div class="g card">🔬 Science and Mathematics subject-monitor responsibilities</div>
+    <div class="g card">📖 Quran-related school activities</div>
+    <div class="g card">🛠️ Creative and technology project planning</div>
+  </div>
+  <div class="quote">Achievements are not only about winning. They are also about participation, improvement, teamwork and the experience gained along the way.</div>
+</section>
+
+<section class="page g" id="future" data-ic="🔭" data-t="Future Dimension">
+  <h2>My vision</h2>
+  <div class="grid">
+    <div class="g card"><h3>🧠 The human brain</h3>One of my biggest academic interests. I’m fascinated by how the brain influences learning, memory, communication and behaviour.</div>
+    <div class="g card"><h3>⚕️ Future ambition</h3>To become a neurologist: study the nervous system, understand neurological conditions and contribute to medical science.</div>
+  </div>
+  <h3 style="margin-top:18px">Long-term mission</h3>
+  <ul><li>Develop strong academic foundations</li><li>Keep learning about neuroscience</li><li>Explore the link between technology and medicine</li><li>Develop useful technological innovations</li><li>Use knowledge and skills to help others</li></ul>
+  <div class="quote">The future is not something I simply wait for. It’s something I work towards.</div>
+</section>
+
+<section class="page g" id="toolbox" data-ic="🧰" data-t="Toolbox">
+  <h2>Free toolbox</h2>
+  <p>Handy calculators you’re welcome to use.</p>
+  <div class="tabs" role="group" aria-label="Tools"><button class="pill" data-tab="tip" aria-pressed="true">Split bill</button><button class="pill" data-tab="pct" aria-pressed="false">Percent</button><button class="pill" data-tab="cv" aria-pressed="false">Convert</button></div>
+  <div data-tool="tip"><div class="row"><div><label for="b">Bill</label><input id="b" type="number" min="0" value="60"></div><div><label for="t">Tip %</label><input id="t" type="number" min="0" value="10"></div><div><label for="p">People</label><input id="p" type="number" min="1" value="3"></div></div><div class="out" id="o1"></div></div>
+  <div data-tool="pct" hidden><div class="row"><div><label for="x">Percent</label><input id="x" type="number" value="15"></div><div><label for="y">of</label><input id="y" type="number" value="240"></div></div><div class="out" id="o2"></div><div class="row"><div><label for="a">Change from</label><input id="a" type="number" value="80"></div><div><label for="c">to</label><input id="c" type="number" value="100"></div></div><div class="out" id="o3"></div></div>
+  <div data-tool="cv" hidden><div class="row"><div><label for="v">Value</label><input id="v" type="number" value="10"></div><div><label for="u">Convert</label><select id="u"><option value="km|mi|0.621371">km to miles</option><option value="mi|km|1.609344">miles to km</option><option value="kg|lb|2.204623">kg to pounds</option><option value="lb|kg|0.453592">pounds to kg</option><option value="c|f">°C to °F</option><option value="f|c">°F to °C</option></select></div></div><div class="out" id="o4"></div></div>
+</section>
+
+<section class="page g" id="arcade" data-ic="🎮" data-t="Arcade">
+  <h2>Arcade</h2>
+  <p>Two quick games. Score big to earn bonus XP.</p>
+  <div class="grid">
+    <div class="g card"><h3>🪰 Fly Catcher</h3><p>Tap the flies. You have 15 seconds. Catch 10 for bonus XP.</p><div id="field" class="field"></div><div class="out"><span id="sc">Score 0</span> · <span id="tm">15s</span></div><p><button class="pill main" id="play">Start</button></p></div>
+    <div class="g card"><h3>🧊 Speedcube timer</h3><p>Press Start, then Stop when you’d finish a solve.</p><div class="out" id="cube">0.00 s</div><p><button class="pill main" id="cb">Start</button></p><p class="meta" id="best"></p></div>
+  </div>
+</section>
+
+<section class="page g" id="connect" data-ic="💌" data-t="Connect">
+  <h2>Let’s connect.</h2>
+  <p>I’m interested in connecting with people who enjoy technology, science, creativity, innovation and learning. Whether it’s discussing an idea, exploring a project or exchanging knowledge, meaningful connections can lead to great things.</p>
+  <div class="grid">
+    <div class="g card"><h3>Instagram</h3><a href="https://instagram.com/mazhar.faizy15" target="_blank" rel="noopener noreferrer">@mazhar.faizy15</a></div>
+    <div class="g card"><h3>GitHub</h3><a href="https://github.com/SpiderWarrior-15" target="_blank" rel="noopener noreferrer">SpiderWarrior-15</a></div>
+    <div class="g card"><h3>Email</h3><a href="mailto:spiderwarrior15@gmail.com">spiderwarrior15@gmail.com</a></div>
+  </div>
+  <h2 style="margin-top:26px">This is only the beginning.</h2>
+  <p>Every idea starts somewhere. Every skill develops through practice. Every achievement begins with an opportunity to learn.</p>
+  <p><b>I’m Mazhar Faizy. I’m Spider Warrior.</b></p>
+  <div class="motto">DISCIPLINE. DEPTH. DESTINY.</div>
+</section>
+</main>
+
+<div class="flow"><button class="pill" id="prev"></button><button class="pill main" id="next"></button></div>
+</div>
+<nav class="dock g" id="dock" aria-label="Pages"></nav>
+
+<script>
+const $=id=>document.getElementById(id),PG=[...document.querySelectorAll('.page')],seen=new Set(),used=new Set();
+let xp=0,cur=0,clicks=0;
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)};
+const burst=()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;for(const e of ['🕷️','⭐','🕸️','✨','🎉','⭐','🕷️','✨','🎉','🕸️']){const s=document.createElement('span');s.className='conf';s.textContent=e;s.style.setProperty('--x',(Math.random()*360-180)+'px');s.style.setProperty('--y',(Math.random()*-260-40)+'px');s.style.setProperty('--r',(Math.random()*540-270)+'deg');document.body.append(s);setTimeout(()=>s.remove(),1000)}};
+const gain=(n,m)=>{xp=Math.min(240,xp+n);$('xpn').textContent=xp;$('xpb').style.width=xp/240*100+'%';$('lv').textContent=1+Math.floor(xp/30);toast(m+' · +'+n+' XP');burst();if(xp>=240)setTimeout(()=>toast('🏆 Max level reached!'),2300)};
+$('dock').innerHTML=PG.map((p,i)=>`<button data-i="${i}" aria-label="${p.dataset.t}">${p.dataset.ic}<span>${p.dataset.t}</span></button>`).join('');
+function show(i){
+  i=Math.max(0,Math.min(PG.length-1,i));cur=i;document.documentElement.style.setProperty('--len',(40+i*24)+'px');
+  PG.forEach((p,k)=>p.classList.toggle('on',k==i));
+  document.querySelectorAll('#dock button').forEach((b,k)=>k==i?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+  const pv=PG[i-1],nx=PG[i+1];
+  $('prev').style.visibility=pv?'visible':'hidden';$('prev').textContent=pv?'← '+pv.dataset.t:'';
+  $('next').style.visibility=nx?'visible':'hidden';$('next').textContent=nx?nx.dataset.t+' →':'';
+  scrollTo({top:0});
+  if(i==6)calc();
+  if(!seen.has(i)){seen.add(i);gain(15,PG[i].dataset.t+' unlocked')}
+}
+const go=i=>{location.hash=PG[Math.max(0,Math.min(PG.length-1,i))].id};
+const fromHash=()=>{const k=PG.findIndex(p=>'#'+p.id==location.hash);show(k<0?0:k)};
+addEventListener('hashchange',fromHash);
+const f=n=>(Math.round(n*100)/100).toLocaleString();
+function calc(){
+  const g=id=>parseFloat($(id).value)||0,tot=g('b')*(1+g('t')/100),pp=Math.max(1,g('p'));
+  $('o1').textContent=`Total ${f(tot)} · Each pays ${f(tot/pp)}`;
+  $('o2').textContent=`${g('x')}% of ${g('y')} = ${f(g('x')*g('y')/100)}`;
+  const a=g('a');$('o3').textContent=a?`Change: ${f((g('c')-a)/Math.abs(a)*100)}%`:'Enter a starting value';
+  const [fr,to,r]=$('u').value.split('|'),v=g('v');
+  const res=fr=='c'?v*9/5+32:fr=='f'?(v-32)*5/9:v*r;
+  $('o4').textContent=`${f(v)} ${fr} = ${f(res)} ${to}`.replace(/ c$/,' °C').replace(/ f$/,' °F');
+}
+document.addEventListener('click',e=>{
+  const d=e.target.closest('#dock button');if(d)return go(+d.dataset.i);
+  if(e.target.closest('[data-go]'))return go(1);
+  if(e.target.closest('#prev'))return go(cur-1);
+  if(e.target.closest('#next'))return go(cur+1);
+  if(e.target.closest('#logo')&&++clicks==5)gain(30,'🕸️ Secret web found');
+  const t=e.target.closest('[data-tab]');
+  if(t){document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',b==t));
+    document.querySelectorAll('[data-tool]').forEach(x=>x.hidden=x.dataset.tool!=t.dataset.tab)}
+});
+document.addEventListener('input',e=>{
+  const d=e.target.closest('[data-tool]');if(!d)return;calc();
+  if(!used.has(d.dataset.tool)){used.add(d.dataset.tool);gain(10,'Tool used')}
+});
+document.addEventListener('change',e=>{if(e.target.id=='u'){calc();if(!used.has('cv')){used.add('cv');gain(10,'Tool used')}}});
+document.addEventListener('keydown',e=>{if(/INPUT|SELECT/.test(e.target.tagName))return;if(e.key=='ArrowRight')go(cur+1);if(e.key=='ArrowLeft')go(cur-1)});
+let sc=0,tl=0,iv,ft,ct=0,cs=0,ci,bst=0;
+$('play').onclick=()=>{clearInterval(iv);clearInterval(ft);sc=0;tl=15;$('sc').textContent='Score 0';$('tm').textContent='15s';$('field').innerHTML='';
+  const spawn=()=>{const b=document.createElement('button');b.className='fly';b.textContent='🪰';b.setAttribute('aria-label','Fly');b.style.left=Math.random()*85+'%';b.style.top=Math.random()*75+'%';b.onclick=()=>{b.remove();sc++;$('sc').textContent='Score '+sc};$('field').append(b);setTimeout(()=>b.remove(),1100)};
+  spawn();ft=setInterval(spawn,550);
+  iv=setInterval(()=>{tl--;$('tm').textContent=tl+'s';if(tl<=0){clearInterval(iv);clearInterval(ft);$('field').innerHTML='';toast('Time! You caught '+sc);if(sc>=10&&!used.has('fly')){used.add('fly');setTimeout(()=>gain(25,'Fly Catcher master'),1200)}}},1000)};
+$('cb').onclick=()=>{if(!ct){cs=performance.now();ct=1;$('cb').textContent='Stop';ci=setInterval(()=>$('cube').textContent=((performance.now()-cs)/1000).toFixed(2)+' s',30)}else{clearInterval(ci);ct=0;const t=(performance.now()-cs)/1000;$('cube').textContent=t.toFixed(2)+' s';$('cb').textContent='Start';if(!bst||t<bst){bst=t;$('best').textContent='Best: '+t.toFixed(2)+' s'}if(!used.has('cube')){used.add('cube');gain(20,'First solve logged')}}};
+$('theme').onclick=()=>{const r=document.documentElement,dk=r.dataset.theme?r.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dk?'light':'dark'};
+fromHash();
+</script>
+</body>
+</html>
